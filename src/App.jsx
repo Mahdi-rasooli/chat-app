@@ -8,6 +8,8 @@ import {
 import Login from '../src/pages/login/Login'
 import Profile from '../src/pages/profile-update/Profile'
 import Chat from '../src/pages/chat/Chat'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {
@@ -16,6 +18,7 @@ function App() {
     <>
       <Router>
         <div>
+          <ToastContainer/>
           <Routes>
             <Route path='/' element={<Login/>}/>
             <Route path='/profile' element={<Profile/>}/>
