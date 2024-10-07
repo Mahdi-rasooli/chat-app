@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import './Login.css'
 import assets from '../../assets/assets'
+import { login, signup } from '../../config/fireBase'
 
 const Login = () => {
 
@@ -8,7 +9,7 @@ const Login = () => {
   const [currState,setCurrState] = useState('Sign up')
 
   const [formData, setFormData] = useState({
-    name: '',
+    username: '',
     password: '',
     email: ""
   })
@@ -21,18 +22,25 @@ const Login = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault()
+    
+    if (currState === 'Sign up') {
+      signup(formData.username,formData.email,formData.password)
+    }
+    else{
+      login(formData.email,formData.password)
+    }
   }
 
   return (
     <div className='login'>
       <img src={assets.logo_big} alt="" className='logo' />
-      <form className='login-form'>
+      <form className='login-form' onSubmit={handleSubmit}>
         <h2>{currState}</h2>
-        {currState === 'Sign up' ? <input type="text" onChange={(event) => onChangeHandler(event)} placeholder='username' name='username' className='login-input' required />
+        {currState === 'Sign up' ? <input type="text" onChange={(event) => onChangeHandler(event)} value={formData.username} placeholder='username' name='username' className='login-input' required />
                                  : ``}
-        <input type="email" onChange={(event) => onChangeHandler(event)} placeholder='Email address' name='email' className='login-input' required />
-        <input type="password" onChange={(event) => onChangeHandler(event)} placeholder='password' name='password' className='login-input' required />
-        <button type='submit' onSubmit={handleSubmit}>{currState === 'Sign up' ? 'Create account' : 'Login'}</button>
+        <input type="email" onChange={(event) => onChangeHandler(event)} value={formData.email} placeholder='Email address' name='email' className='login-input' required />
+        <input type="password" onChange={(event) => onChangeHandler(event)} value={formData.password} placeholder='password' name='password' className='login-input' required />
+        <button type='submit'>{currState === 'Sign up' ? 'Create account' : 'Login'}</button>
         <div className="login-term">
           <input type="checkbox" required />
           <p>Agree to the terms of use & privacy policy.</p>
