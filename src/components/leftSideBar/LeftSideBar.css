@@ -124,3 +124,11 @@
     display: block;
 }
 
+
+.contacts.border img{
+    border: 2px solid #07fff3;
+}
+
+.contacts.border div span{
+    color: #07fff3;
+}

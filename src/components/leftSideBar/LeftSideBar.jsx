@@ -10,7 +10,7 @@ import { toast } from 'react-toastify'
 const LeftSideBar = () => {
 
   const navigate = useNavigate()
-  const { userData, chatData, messagesId, setMessagesId,chatUser, setChatUser } = useContext(AppContext)
+  const { userData, chatData, messagesId, setMessagesId, chatUser, setChatUser } = useContext(AppContext)
   const [user, setUser] = useState(null)
   const [showSearch, setShowSearch] = useState(false)
 
@@ -88,8 +88,21 @@ const LeftSideBar = () => {
   }
 
   const setChat = async (item) => {
-    setMessagesId(item.messageId)
-    setChatUser(item)
+
+    try {
+      setMessagesId(item.messageId)
+      setChatUser(item)
+      const userChatsRef = doc(db, 'chats', userData.id)
+      const userChatsSnapShot = await getDoc(userChatsRef)
+      const userChatData = userChatsSnapShot.data() 
+      const chatIndex = userChatData.chatData.findIndex((c) => c.messageId === item.messageId)
+      userChatData.chatData[chatIndex].messageSeen = true
+      await updateDoc(userChatsRef, {
+        chatData: userChatData.chatData
+      })
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -120,7 +133,7 @@ const LeftSideBar = () => {
           </div>
           : (chatData && chatData.length > 0 ?
             (chatData.map((item, index) => (
-              <div onClick={() => setChat(item)} className="contacts" key={index}>
+              <div onClick={() => setChat(item)} className={`contacts ${item.messageSeen || item.messageId === messagesId ? '' : 'border'}`} key={index}>
                 <img src={item.userData.avatar} alt="" />
                 <div>
                   <p>{item.userData.name}</p>
